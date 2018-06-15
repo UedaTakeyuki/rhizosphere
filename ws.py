@@ -10,6 +10,7 @@ import ssl
 import os
 import pprint
 import json
+import traceback
 
 cl=[]
 connections={}
@@ -34,7 +35,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
             if ms["command"] == "register":
                 connections[ms["id"]] = {"cn": self}
                 print ("register {}".format(ms["id"]))
-        except JSONDecodeError:
+        except:
+            info=sys.exc_info()
+            print (traceback.format_exc(info[0]))
             pass
 
         print ("on_message")
