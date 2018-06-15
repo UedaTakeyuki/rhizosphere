@@ -4,38 +4,72 @@ import tornado.ioloop
 import tornado.web
 import tornado.websocket
 from tornado.options import define, options
-import time
+from tornado import gen
+#import time
 import ssl
 import os
- 
-cl=[]
+import pprint
+import json
 
-#クライアントからメッセージを受けるとopen → on_message → on_closeが起動する
+cl=[]
+connections={}
+
+command = {
+    "order": "exec_bash",
+    "cmd_str": "ls"
+}
+
+
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
-    #websocketオープン
     def open(self):
         print ("open")
         if self not in cl:
             cl.append(self)
- 
-    #処理
+
+    @gen.coroutine
     def on_message(self, message):
+        try: 
+            ms = json.loads(message)
+            if ms["command"] == "register":
+                connections[ms["id"]] = {"cn": self}
+                print ("register {}".format(ms["id"]))
+        except JSONDecodeError:
+            pass
+
         print ("on_message")
-#        time.sleep(3600)
-        for client in cl:
-            print (message)
-            #クライアントへメッセージを送信
-            client.write_message(message + " webSocket")
+#        while True:
+#            yield gen.sleep(3)
+#            self.write_message(message + "hello")
  
-    #websockeクローズ
     def on_close(self):
         print ("close")
         if self in cl:
             cl.remove(self)
 
+class ConsoleHandler(tornado.web.RequestHandler):
+    def get(self):
+        self.write(pprint.pformat(cl))
+        self.write(pprint.pformat(connections))
+
+class CommandHandler(tornado.web.RequestHandler):
+    def get(self):
+        try:
+            id      = self.get_argument('id')
+            cmd_str = self.get_argument('cmd_str')
+            connections[id]["cn"].write_message(
+                json.dumps({
+                    "order": "exec_bash",
+                    "cmd_str": cmd_str
+                })
+            )
+        except tornado.web.MissingArgumentError:
+            pass
+
 app = tornado.web.Application([
-    (r"/websocket", WebSocketHandler)
+    (r"/websocket", WebSocketHandler),
+    (r"/console",   ConsoleHandler),
+    (r"/command",   CommandHandler),
 ])
 
 if __name__ == "__main__":
