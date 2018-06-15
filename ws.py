@@ -3,6 +3,7 @@
 import tornado.ioloop
 import tornado.web
 import tornado.websocket
+from tornado.options import define, options
 import time
 import ssl
 import os
@@ -38,11 +39,26 @@ app = tornado.web.Application([
 ])
 
 if __name__ == "__main__":
-#   app.listen(8888)
-    ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
-    data_dir = "/etc/letsencrypt/live/titurel.uedasoft.com/"
-    ssl_ctx.load_cert_chain(os.path.join(data_dir, "cert.pem"),
-                            os.path.join(data_dir, "privkey.pem"))
-    http_server = tornado.httpserver.HTTPServer(app, ssl_options=ssl_ctx)
-    http_server.listen(8888)
+# options
+    define("protocol",      default="wss:", help="ws: or wss:(default)")
+    define("port",          default=8888, help="listening port", type=int)    
+    define("data_dir",      default="/etc/letsencrypt/live/titurel.uedasoft.com/", help="cert file path for running with ssl")
+    define("cert_file",     default="cert.pem", help="cert file name for running with ssl")
+    define("privkey_file",  default="privkey.pem", help="privkey file name for running with ssl")
+    define("config_file",   default="", help="config file path")
+    options.parse_command_line()
+    if options.config_file:
+        options.parse_config_file(options.config_file)
+
+    if options.protocol == "ws:":
+        http_server = tornado.httpserver.HTTPServer(app)
+    else:
+#       app.listen(8888)
+        ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
+        data_dir = options.data_dir
+        ssl_ctx.load_cert_chain(os.path.join(data_dir, options.cert_file),
+                                os.path.join(data_dir, options.privkey_file))
+        http_server = tornado.httpserver.HTTPServer(app, ssl_options=ssl_ctx)
+
+    http_server.listen(options.port)
     tornado.ioloop.IOLoop.instance().start()
