@@ -17,15 +17,15 @@ root server for collaborative devices
 ```json
 # command
 { 
-  "type"  : "comman",
-  "id"    :
+  "type"  : "command",
+  "id"    : "id of command"
   "order" : "exec_bash | exec_bash_ret_okng_only | exec_bash_no_return"
 }
 
 # response
 { 
   "type"  : "response",
-  "id"    : # same id of command
-  "resutl" : # string | "ok" or "ng" | null
+  "id"    : "the same id of command
+  "resutl" : "result string | "ok" or "ng" | null"
 }
 ```
