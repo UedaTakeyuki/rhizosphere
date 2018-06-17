@@ -6,8 +6,11 @@
 <body>
   <div class="mermaid">
     sequenceDiagram
-      hypha -x rhizosphere : connect
-      hypha -x rhizosphere : register id
+      hypha -x rhizosphere   : connect
+      console -x rhizosphere : command
+      rhizosphere -x hypha   : command
+      hypha -x rhizosphere   : result
+      rhizosphere -x console : result    
   </div>
   <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
   <script>mermaid.initialize({startOnLoad:true});</script>
