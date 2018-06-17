@@ -12,3 +12,8 @@ root server for collaborative devices
 
 ## Sequence
 <img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence.png">
+
+## Data
+```json
+{ "some": "json" }
+```
