@@ -10,3 +10,5 @@ root server for collaborative devices
 * ***rhizospere :*** Centoral server which provide these features mentioned above.
 * ***[hypha](https://github.com/UedaTakeyuki/hypha) :*** Device controller. 
 
+## Sequence
+<img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence.png">
