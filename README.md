@@ -18,14 +18,14 @@ root server for collaborative devices
 # command
 { 
   "type"  : "command",
-  "id"    : , #id of command
+  "id"    : "id of command",
   "order" : "exec_bash | exec_bash_ret_okng_only | exec_bash_no_return"
 }
 
 # response
 { 
   "type"  : "response",
-  "id"    : "the same id of command
+  "id"    : "the same id of command,
   "resutl" : "result string | "ok" or "ng" | null"
 }
 ```
