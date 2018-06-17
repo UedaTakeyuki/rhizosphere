@@ -18,7 +18,7 @@ root server for collaborative devices
 # command
 { 
   "type"  : "command",
-  "id"    : "id of command"
+  "id"    : , #id of command
   "order" : "exec_bash | exec_bash_ret_okng_only | exec_bash_no_return"
 }
 
