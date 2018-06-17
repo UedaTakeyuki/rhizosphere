@@ -15,5 +15,17 @@ root server for collaborative devices
 
 ## Data
 ```json
-{ "some": "json" }
+# command
+{ 
+  "type"  : "comman",
+  "id"    :
+  "order" : "exec_bash | exec_bash_ret_okng_only | exec_bash_no_return"
+}
+
+# response
+{ 
+  "type"  : "response",
+  "id"    : # same id of command
+  "resutl" : # string | "ok" or "ng" | null
+}
 ```
