@@ -26,6 +26,6 @@ root server for collaborative devices
 { 
   "type"  : "response",
   "id"    : "the same id of command,
-  "resutl" : "result string | "ok" or "ng" | null"
+  "resutl" : "result string | ok or ng | null"
 }
 ```
