@@ -2,15 +2,16 @@
 
 import tornado.ioloop
 import tornado.web
-import tornado.websocket
+#import tornado.websocket
 from tornado.options import define, options
-from tornado import gen
+#from tornado import gen
 #import time
 import ssl
 import os
 import pprint
 import json
 import traceback
+import importlib
 
 cl=[]
 connections={}
@@ -20,35 +21,6 @@ command = {
     "cmd_str": "ls"
 }
 
-
-class WebSocketHandler(tornado.websocket.WebSocketHandler):
-
-    def open(self):
-        print ("open")
-        if self not in cl:
-            cl.append(self)
-
-    @gen.coroutine
-    def on_message(self, message):
-        try: 
-            ms = json.loads(message)
-            if ms["command"] == "register":
-                connections[ms["id"]] = {"cn": self}
-                print ("register {}".format(ms["id"]))
-        except:
-            info=sys.exc_info()
-            print (traceback.format_exc(info[0]))
-            pass
-
-        print ("on_message")
-#        while True:
-#            yield gen.sleep(3)
-#            self.write_message(message + "hello")
- 
-    def on_close(self):
-        print ("close")
-        if self in cl:
-            cl.remove(self)
 
 class ConsoleHandler(tornado.web.RequestHandler):
     def get(self):
@@ -69,13 +41,21 @@ class CommandHandler(tornado.web.RequestHandler):
         except tornado.web.MissingArgumentError:
             pass
 
-app = tornado.web.Application([
-    (r"/websocket", WebSocketHandler),
-    (r"/console",   ConsoleHandler),
-    (r"/command",   CommandHandler),
-])
-
 if __name__ == "__main__":
+# https://stackoverflow.com/questions/547829/how-to-dynamically-load-a-python-class
+    module = importlib.import_module('sample_rhizome')
+    module.cl = cl
+    module.connections = connections
+    rhizome = getattr(module, 'WebSocketHandler')
+
+# app
+    app = tornado.web.Application([
+#        (r"/websocket", WebSocketHandler),
+        (r"/websocket", rhizome),
+        (r"/console",   ConsoleHandler),
+        (r"/command",   CommandHandler),
+    ])
+
 # options
     define("protocol",      default="wss:", help="ws: or wss:(default)")
     define("port",          default=8888, help="listening port", type=int)    
