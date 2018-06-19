@@ -8,13 +8,15 @@ from tornado.options import define, options
 #import time
 import ssl
 import os
-import pprint
-import json
+import sys
+# import pprint
+# import json
 import traceback
 import importlib
 
 cl=[]
 connections={}
+a=[]
 
 command = {
     "order": "exec_bash",
@@ -22,50 +24,52 @@ command = {
 }
 
 
-class ConsoleHandler(tornado.web.RequestHandler):
-    def get(self):
-        self.write(pprint.pformat(cl))
-        self.write(pprint.pformat(connections))
-
-class CommandHandler(tornado.web.RequestHandler):
-    def get(self):
-        try:
-            id      = self.get_argument('id')
-            cmd_str = self.get_argument('cmd_str')
-            connections[id]["cn"].write_message(
-                json.dumps({
-                    "order": "exec_bash",
-                    "cmd_str": cmd_str
-                })
-            )
-        except tornado.web.MissingArgumentError:
-            pass
-
 if __name__ == "__main__":
+# options
+    define("protocol",              default="wss:", help="ws: or wss:(default)")
+    define("port",                  default=8888, help="listening port", type=int)    
+    define("data_dir",              default="/etc/letsencrypt/live/titurel.uedasoft.com/", help="cert file path for running with ssl")
+    define("cert_file",             default="cert.pem", help="cert file name for running with ssl")
+    define("privkey_file",          default="privkey.pem", help="privkey file name for running with ssl")
+    define("config_file",           default="",         help="config file path")
+    define("rhizome_route",         default="/rhizome", help="route of rhizome")
+    define("rhizome_module_name",   default="",         help="[mandatory] module name of rhizome")
+    define("rhizome_module_path",   default="",         help="full path of rhizome module file")
+    define("rhizome_handler",       default="",         help="[mandatory] handler class name of rhizome")
+    options.parse_command_line()
+    if options.config_file:
+        options.parse_config_file(options.config_file)
+    elif os.path.exists('./config.py'):
+        options.parse_config_file('./config.py')
+
+
 # https://stackoverflow.com/questions/547829/how-to-dynamically-load-a-python-class
-    module = importlib.import_module('sample_rhizome')
+    if options.rhizome_module_path:
+        sys.path.append(options.rhizome_module_path)
+    module = importlib.import_module(options.rhizome_module_name)
     module.cl = cl
     module.connections = connections
-    rhizome = getattr(module, 'WebSocketHandler')
+    rhizome = getattr(module, options.rhizome_handler)
+
+    module = importlib.import_module("sample_consolehandler")
+    module.cl = cl
+    module.connections = connections
+    consolehandler = getattr(module, "ConsoleHandler")
+
+    module = importlib.import_module("sample_commandhandler")
+    module.cl = cl
+    module.connections = connections
+    commandhandler = getattr(module, "CommandHandler")
+
 
 # app
     app = tornado.web.Application([
 #        (r"/websocket", WebSocketHandler),
-        (r"/websocket", rhizome),
-        (r"/console",   ConsoleHandler),
-        (r"/command",   CommandHandler),
+#        (r"/websocket", rhizome),
+        (options.rhizome_route, rhizome),
+        (r"/console",   consolehandler),
+        (r"/command",   commandhandler),
     ])
-
-# options
-    define("protocol",      default="wss:", help="ws: or wss:(default)")
-    define("port",          default=8888, help="listening port", type=int)    
-    define("data_dir",      default="/etc/letsencrypt/live/titurel.uedasoft.com/", help="cert file path for running with ssl")
-    define("cert_file",     default="cert.pem", help="cert file name for running with ssl")
-    define("privkey_file",  default="privkey.pem", help="privkey file name for running with ssl")
-    define("config_file",   default="", help="config file path")
-    options.parse_command_line()
-    if options.config_file:
-        options.parse_config_file(options.config_file)
 
     if options.protocol == "ws:":
         http_server = tornado.httpserver.HTTPServer(app)

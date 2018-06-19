@@ -3,13 +3,26 @@ from tornado import gen
 import json
 import sys
 import traceback
+from pprint import pprint
 
 class WebSocketHandler(tornado.websocket.WebSocketHandler):
 
-    def open(self):
+    def open(self, *args, **kwargs):
         print ("open")
+        pprint(args)
+        pprint(kwargs)
+        pprint(vars(self.request.headers))
+        pprint(vars(self))
+        pprint(self.request.headers.get('X-Custome-Aho'))
+        pprint(self.request.headers.get('Authorization'))
+        pprint(self.request.headers.get('Authorization').startswith('Bearer '))
+        
         if self not in cl:
             cl.append(self)
+
+#        super(WebSocketHandler, self).set_status(401)
+#        super(WebSocketHandler, self).set_header('WWW-Authenticate','Basic realm="%s"' % "aho")
+#        self.close()
 
     @gen.coroutine
     def on_message(self, message):
@@ -30,6 +43,8 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
  
     def on_close(self):
         print ("close")
+        if self in cl:
+            cl.remove(self)
         if self in cl:
             cl.remove(self)
 
