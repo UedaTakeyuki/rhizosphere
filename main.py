@@ -9,7 +9,7 @@ from tornado.options import define, options
 import ssl
 import os
 import sys
-# import pprint
+import pprint
 # import json
 import traceback
 import importlib
@@ -34,7 +34,7 @@ if __name__ == "__main__":
     define("config_file",           default="",         help="config file path")
     define("rhizome_route",         default="/rhizome", help="route of rhizome")
     define("rhizome_module_name",   default="",         help="[mandatory] module name of rhizome")
-    define("rhizome_module_path",   default="",         help="full path of rhizome module file")
+    define("rhizome_module_path",   default="",         help="full path of rhizome module file",multiple=True, metavar="path1, path2...")
     define("rhizome_handler",       default="",         help="[mandatory] handler class name of rhizome")
     options.parse_command_line()
     if options.config_file:
@@ -42,10 +42,12 @@ if __name__ == "__main__":
     elif os.path.exists('./config.py'):
         options.parse_config_file('./config.py')
 
+    print(options.rhizome_module_path)
 
 # https://stackoverflow.com/questions/547829/how-to-dynamically-load-a-python-class
     if options.rhizome_module_path:
-        sys.path.append(options.rhizome_module_path)
+        [sys.path.append(x) for x in options.rhizome_module_path]
+#        sys.path.append(options.rhizome_module_path)
     module = importlib.import_module(options.rhizome_module_name)
     module.cl = cl
     module.connections = connections
