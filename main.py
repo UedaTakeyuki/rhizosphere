@@ -28,50 +28,54 @@ if __name__ == "__main__":
 # options
     define("protocol",              default="wss:", help="ws: or wss:(default)")
     define("port",                  default=8888, help="listening port", type=int)    
-    define("data_dir",              default="/etc/letsencrypt/live/titurel.uedasoft.com/", help="cert file path for running with ssl")
+    define("data_dir",              default="", help="cert file path for running with ssl")
     define("cert_file",             default="cert.pem", help="cert file name for running with ssl")
     define("privkey_file",          default="privkey.pem", help="privkey file name for running with ssl")
     define("config_file",           default="",         help="config file path")
-    define("rhizome_route",         default="/rhizome", help="route of rhizome")
-    define("rhizome_module_name",   default="",         help="[mandatory] module name of rhizome")
-    define("rhizome_module_path",   default="",         help="full path of rhizome module file",multiple=True, metavar="path1, path2...")
-    define("rhizome_handler",       default="",         help="[mandatory] handler class name of rhizome")
+    define("additional_module_path",default="",         help="path of importing modules",multiple=True, metavar="path1, path2...")
+    define("devices_route",         default="/devices", help="route of devices",metavar="/route")
+    define("devices_module",        default="",         help="[mandatory] module name of rhizome")
+    define("devices_handler",       default="",         help="[mandatory] handler class name of rhizome")
+    define("static_path",           default="sample_handlers/static",        help="[mandatory] handler class name of rhizome")
+    define("templates_path",        default="sample_handlers/templates",     help="[mandatory] handler class name of rhizome")
     options.parse_command_line()
     if options.config_file:
         options.parse_config_file(options.config_file)
     elif os.path.exists('./config.py'):
         options.parse_config_file('./config.py')
 
-    print(options.rhizome_module_path)
+    print(options.additional_module_path)
 
 # https://stackoverflow.com/questions/547829/how-to-dynamically-load-a-python-class
-    if options.rhizome_module_path:
-        [sys.path.append(x) for x in options.rhizome_module_path]
+    if options.additional_module_path:
+        [sys.path.append(x) for x in options.additional_module_path]
 #        sys.path.append(options.rhizome_module_path)
-    module = importlib.import_module(options.rhizome_module_name)
-    module.cl = cl
-    module.connections = connections
-    rhizome = getattr(module, options.rhizome_handler)
+    mod_devs = importlib.import_module(options.devices_module)
+#    mod_devs.cl = cl
+    mod_devs.connections = connections
+    deviceshandler = getattr(mod_devs, options.devices_handler)
 
-    module = importlib.import_module("sample_consolehandler")
-    module.cl = cl
-    module.connections = connections
-    consolehandler = getattr(module, "ConsoleHandler")
+    mod_cons = importlib.import_module("sample_consolehandler")
+    mod_cons.cl = cl
+    mod_cons.connections = connections
+    consolehandler = getattr(mod_cons, "ConsoleHandler")
 
-    module = importlib.import_module("sample_commandhandler")
-    module.cl = cl
-    module.connections = connections
-    commandhandler = getattr(module, "CommandHandler")
+    mod_cmd = importlib.import_module("sample_commandhandler")
+    mod_cmd.cl = cl
+    mod_cmd.connections = connections
+    commandhandler = getattr(mod_cmd, "CommandHandler")
 
 
 # app
+    BASE_DIR = os.path.dirname(__file__)
     app = tornado.web.Application([
-#        (r"/websocket", WebSocketHandler),
-#        (r"/websocket", rhizome),
-        (options.rhizome_route, rhizome),
-        (r"/console",   consolehandler),
-        (r"/command",   commandhandler),
-    ])
+            (options.devices_route, deviceshandler),
+            (r"/console",   consolehandler),
+            (r"/command",   commandhandler),
+        ],
+        template_path=os.path.join(BASE_DIR, options.templates_path),
+        static_path=os.path.join(BASE_DIR, options.static_path),
+    )
 
     if options.protocol == "ws:":
         http_server = tornado.httpserver.HTTPServer(app)

@@ -1,6 +1,7 @@
 protocol = "wss:"
-rhizome_module_name  = "sample_rhizome"
-rhizome_module_path    = ["test", "sample_handlers"] 
+devices_module  = "sample_deviceshandler"
+data_dir = "/etc/letsencrypt/live/titurel.uedasoft.com/"
+additional_module_path    = ["test", "sample_handlers"] 
 #rhizome_module_name  = "a"
-rhizome_handler = "WebSocketHandler"
-rhizome_route = "/websocket"
+devices_handler = "WebSocketHandler"
+devices_route = "/websocket"

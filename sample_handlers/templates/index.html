@@ -1,0 +1,10 @@
+{% import pprint %}
+<html>
+  <head>
+    <title>Hello Tornado</title>
+    <link rel="stylesheet" href="{{ static_url('/node_modules/materialize-css/dist/css/materialize.min.css') }}" />
+  </head>
+  <body>
+    <h1>Hello, {{pprint.pformat(connections) }}!</h1>
+  </body>
+</html>
