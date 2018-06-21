@@ -17,7 +17,7 @@ root server for collaborative devices
 <video>
   <source src='https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/rhizosphere.mov' type='video/mp4'>
 </video>
-[demo movie](https://www.youtube.com/watch?v=L_7clcDccdQ&feature=youtu.be)
+[demo movie](https://youtu.be/L_7clcDccdQ)
 
 ## Data
 ```json
