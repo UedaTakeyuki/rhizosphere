@@ -14,13 +14,17 @@ root server for collaborative devices
 <img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence2.png">
 
 ## Demo
+* A Raspberry Pi, running [hypha](https://github.com/UedaTakeyuki/hypha), is connected with ***rhizospere*** by ***3G dongle***.
+* Browser connect ***rhizospere***, select ***Device id***.
+* Send Bash commands from Browser. Then, the command is ***transit*** to RPi device, ran and return result. 
+
 <video>
   <source src='https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/rhizosphere.mov' type='video/mp4'>
 </video>
 
 <img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/rhizospere.gif">
 
-[demo movie](https://youtu.be/L_7clcDccdQ)
+[demo movie](https://youtu.be/L_7clcDccdQ) on the youtube.
 
 ## Data
 ```json
