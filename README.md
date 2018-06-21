@@ -11,7 +11,13 @@ root server for collaborative devices
 * ***[hypha](https://github.com/UedaTakeyuki/hypha) :*** Device controller. 
 
 ## Sequence
-<img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence.png">
+<img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence2.png">
+
+## Demo
+<video>
+  <source src='https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence2.png' type='video/mp4'>
+</video>
+<img src="https://github.com/UedaTakeyuki/rhizosphere/blob/master/docs/sequence2.png">
 
 ## Data
 ```json
