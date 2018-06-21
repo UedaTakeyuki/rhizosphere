@@ -6,12 +6,12 @@
 <body>
   <div class="mermaid">
     sequenceDiagram
-      hypha -x rhizosphere   : connect
+      device -x server   : connect
       loop every command
-        console -x rhizosphere : command
-        rhizosphere -x hypha   : command
-        hypha -x rhizosphere   : result
-        rhizosphere -x console : result
+        browser -x server : command
+        server -x device   : command
+        device -x server   : result
+        server -x blowser : result
       end
   </div>
   <script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
