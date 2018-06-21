@@ -1,10 +1,76 @@
+<!- https://stackoverflow.com/questions/12993835/passing-a-custom-python-function-into-a-tornado-template -->
 {% import pprint %}
 <html>
   <head>
-    <title>Hello Tornado</title>
-    <link rel="stylesheet" href="{{ static_url('/node_modules/materialize-css/dist/css/materialize.min.css') }}" />
+    <title>Connected Devices</title>
+    <link rel="stylesheet" href="{{ static_url('node_modules/materialize-css/dist/css/materialize.min.css') }}" />
+    <!--Let browser know website is optimized for mobile-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <style>
+			footer {
+   			position: fixed;
+   			left: 0;
+   			bottom: 0;
+   			width: 100%;
+   			background-color: red;
+   			color: white;
+   			text-align: center;
+			}
+  		main {
+    		flex: 1 0 auto;
+  		}
+			body {
+    		display: flex;
+    		min-height: 100vh;
+    		flex-direction: column;
+    		margin-bottom:250px;
+			}
+		</style>
   </head>
   <body>
-    <h1>Hello, {{pprint.pformat(connections) }}!</h1>
+  	<div class="navbar-fixed">
+  	<nav>
+    	<div class="nav-wrapper">
+    		<a href="#" class="brand-logo center">Devices</a>
+    	</div>
+  	</nav></div>
+  	<!--JavaScript at end of body for optimized loading-->
+    <script type="text/javascript" src="{{ static_url('node_modules/materialize-css/dist/js/materialize.min.js') }}">
+    </script>
+    <script type="text/javascript">
+		  document.addEventListener('DOMContentLoaded', function() {
+		    var elems = document.querySelectorAll('.modal');
+		    var instances = M.Modal.init(elems);
+		  });
+		</script>
+		<div class = "row">
+
+	    {{pprint.pformat(connections) }}
+
+  		<!-- Modal Trigger -->
+  		<a class="waves-effect waves-light btn modal-trigger" href="#modal1">Modal</a>
+
+		  <!-- Modal Structure -->
+  		<div id="modal1" class="modal modal-fixed-footer">
+    		<div class="modal-content">
+      		<h4>Modal Header</h4>
+      		<p>A bunch of text</p>
+    		</div>
+    	<div class="modal-footer">
+      <a href="#!" class="modal-close waves-effect waves-green btn-flat">Agree</a>
+    	</div>
+    </div>
+  </div>
+
+    <footer class="page-footer">
+      <div class="container">
+        <div class="footer-copyright">
+          <div class="container">
+            © 2018 - Copyright Takeyuki UEDA
+          </div>
+        </div>
+      </div>
+    </footer>
+
   </body>
 </html>

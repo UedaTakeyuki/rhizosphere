@@ -65,6 +65,11 @@ if __name__ == "__main__":
     mod_cmd.connections = connections
     commandhandler = getattr(mod_cmd, "CommandHandler")
 
+    mod_clt = importlib.import_module("sample_clienthandler")
+    mod_clt.cl = cl
+    mod_clt.connections = connections
+    clienthandler = getattr(mod_clt, "WebSocketHandler")
+
 
 # app
     BASE_DIR = os.path.dirname(__file__)
@@ -72,6 +77,7 @@ if __name__ == "__main__":
             (options.devices_route, deviceshandler),
             (r"/console",   consolehandler),
             (r"/command",   commandhandler),
+            (r"/client",    clienthandler),            
         ],
         template_path=os.path.join(BASE_DIR, options.templates_path),
         static_path=os.path.join(BASE_DIR, options.static_path),

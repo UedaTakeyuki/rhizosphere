@@ -20,7 +20,7 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         if self.auth_confirm(id, token):
             # register
             self.id = id
-            connections[id] = {"cn": self}
+            connections[id] = {"device_socket": self}
             print ("register {}".format(id))
         else:
             # close
@@ -30,6 +30,9 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
     @gen.coroutine
     def on_message(self, message):
         print ("on_message")
+        print(message)
+        if "client_socket" in connections[self.id]:
+            connections[self.id]["client_socket"].write_message(message)
  
     def on_close(self):
         print ("close")
