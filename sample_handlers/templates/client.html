@@ -31,7 +31,7 @@
   	<div class="navbar-fixed">
   	<nav>
     	<div class="nav-wrapper">
-    		<a href="#" class="brand-logo center">Devices</a>
+    		<a href="#" class="brand-logo center">{{id}}</a>
     	</div>
   	</nav></div>
   	<!--JavaScript at end of body for optimized loading-->
@@ -42,7 +42,7 @@
       // 接続先URI
       var url = "wss://id:pass@titurel.uedasoft.com:8888/client";
 //      var sock = new WebSocket(url, ["id", "pw"]);
-      var sock = new WebSocket(url, ["00000000858229a0"]);
+      var sock = new WebSocket(url, ["{{id}}"]);
 
       // 接続
       sock.addEventListener('open',function(e){
@@ -93,7 +93,7 @@
       <div class="container">
         <div class="footer-copyright">
           <div class="container">
-            © 2018 - Copyright Atelier UEDA
+            © 2018 - Copyright Takeyuki UEDA
           </div>
         </div>
       </div>

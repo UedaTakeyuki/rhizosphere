@@ -6,14 +6,14 @@ class CommandHandler(tornado.web.RequestHandler):
         try:
             id      = self.get_argument('id')
             cmd_str = self.get_argument('cmd_str')
-            connections[id]["device_socket"].write_message(
-                json.dumps({
-                    "order": "exec_bash",
-                    "cmd_str": cmd_str
-                })
-            )
+#            connections[id]["device_socket"].write_message(
+#                json.dumps({
+#                    "order": "exec_bash",
+#                    "cmd_str": cmd_str
+#                })
+#            )
         except tornado.web.MissingArgumentError:
             pass
 
-        self.render('client.html', connections=connections)
+        self.render('client.html', connections=connections, id=id)
 
