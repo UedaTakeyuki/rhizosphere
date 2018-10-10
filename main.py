@@ -14,9 +14,9 @@ import pprint
 import traceback
 import importlib
 
-cl=[]
+#cl=[]
 connections={}
-a=[]
+#a=[]
 
 command = {
     "order": "exec_bash",
@@ -56,17 +56,17 @@ if __name__ == "__main__":
     deviceshandler = getattr(mod_devs, options.devices_handler)
 
     mod_cons = importlib.import_module("sample_consolehandler")
-    mod_cons.cl = cl
+#    mod_cons.cl = cl
     mod_cons.connections = connections
     consolehandler = getattr(mod_cons, "ConsoleHandler")
 
     mod_cmd = importlib.import_module("sample_commandhandler")
-    mod_cmd.cl = cl
+#    mod_cmd.cl = cl
     mod_cmd.connections = connections
     commandhandler = getattr(mod_cmd, "CommandHandler")
 
     mod_clt = importlib.import_module("sample_clienthandler")
-    mod_clt.cl = cl
+#    mod_clt.cl = cl
     mod_clt.connections = connections
     clienthandler = getattr(mod_clt, "WebSocketHandler")
 
