@@ -42,3 +42,16 @@ root server for collaborative devices
   "resutl" : "result string | ok or ng | null"
 }
 ```
+
+## Global Variable
+
+```json
+connections 
+= {
+    "device_id": {
+       "device_socket": "socket for device", 
+       "client_socket": "socket for client"
+     }
+   }
+   
+```
