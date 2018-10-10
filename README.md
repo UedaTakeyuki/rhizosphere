@@ -49,8 +49,8 @@ root server for collaborative devices
 connections 
 = {
     "device_id": {
-       "device_socket": socket for device, 
-       "client_socket": socket for client
+       "device_socket": "socket for device", 
+       "client_socket": "socket for client"
      }
    }
    
