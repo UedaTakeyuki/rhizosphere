@@ -8,9 +8,10 @@ class WebSocketHandler(tornado.websocket.WebSocketHandler):
         print ("token = {}".format(token))
         return True
 
-    def open(self):
-        print ("open")
-        id = self.request.headers.get('Sec-Websocket-Protocol')
+    def open(self, id):
+#        print ("open")
+#        id = self.request.headers.get('Sec-Websocket-Protocol')
+        print ("open",id)
         self.id = id
         print (id)
         if id in connections:

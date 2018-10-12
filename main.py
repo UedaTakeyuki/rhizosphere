@@ -77,7 +77,7 @@ if __name__ == "__main__":
             (options.devices_route, deviceshandler),
             (r"/console",   consolehandler),
             (r"/command",   commandhandler),
-            (r"/client",    clienthandler),            
+            (r"/client/(.*)",    clienthandler),            
         ],
         template_path=os.path.join(BASE_DIR, options.templates_path),
         static_path=os.path.join(BASE_DIR, options.static_path),

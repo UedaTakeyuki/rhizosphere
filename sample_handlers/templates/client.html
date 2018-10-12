@@ -1,4 +1,4 @@
-<!- https://stackoverflow.com/questions/12993835/passing-a-custom-python-function-into-a-tornado-template -->
+<!-- https://stackoverflow.com/questions/12993835/passing-a-custom-python-function-into-a-tornado-template -->
 {% import pprint %}
 <html>
   <head>
@@ -40,9 +40,11 @@
 
     <script>
       // 接続先URI
-      var url = "wss://id:pass@titurel.uedasoft.com:8888/client";
+//      var url = "wss://id:pass@titurel.uedasoft.com:8888/client";
+      var url = "wss://id:pass@titurel.uedasoft.com:8888/client/{{id}}";
 //      var sock = new WebSocket(url, ["id", "pw"]);
-      var sock = new WebSocket(url, ["{{id}}"]);
+//      var sock = new WebSocket(url, ["{{id}}"]);
+      var sock = new WebSocket(url);
 
       // 接続
       sock.addEventListener('open',function(e){
