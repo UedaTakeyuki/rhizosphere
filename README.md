@@ -43,7 +43,9 @@ root server for collaborative devices
 }
 ```
 
-## Global Variable
+## connections
+
+```connections``` is a key parts for interconnection between device and console. connections is a dictionaly which there key is specified by device id. The value of the connection is also dictionalys which has 2 value, one is the device side bi-directional socket and the other is client side bi-directional soket.
 
 ```json
 connections 
@@ -54,4 +56,25 @@ connections
      }
    }
    
+```
+
+### RhizoSpereHandler
+
+```RhizoSpereHandler``` is python key module for handling connection between device and clinet.
+RhizoSpereHandler module is set by option or config file specified as rhizosperehandlers, and import dinamically by main.py.
+RhizoSpereHandler module must have a string member variable, named "type", which specifies a manner of initialization.
+
+Following type string are available.
+
+#### RS_cdpair_and_connections_shares
+
+This type of RhizoSpereHandler is for a connections and several classes which share the connections as module global.
+These classes are as follows:
+- class for device handler, named RS_DeviceHandler
+- class for client handler, named RS_ClientHandler
+- other classes use the connections, for example, provide Web UI, IoT connection and so on.
+
+Other classes mentioned above should be listed up by the module member of connections_shares like:
+```
+connections_shares = ["RS_WebPortalPageHander", "RS_WebCommandPageHandler"]
 ```
