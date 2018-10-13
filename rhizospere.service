@@ -1,0 +1,12 @@
+[Unit]
+Description=Get temp, humid, and humiditydeficit data & Post to the monitor
+After=rc-local.service
+[Service]
+ExecStart=/usr/bin/python3 -m /home/ueda/rhizosphere/main
+Restart=always
+#RestartSec=90
+RestartSec=30
+Type=simple
+PIDFile=/var/run/rhizospere.pid
+[Install]
+WantedBy=multi-user.target
