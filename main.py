@@ -8,7 +8,6 @@ import ssl
 import os
 import sys
 import pprint
-import traceback
 import importlib
 
 command = {
