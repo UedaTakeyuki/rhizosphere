@@ -1,7 +1,10 @@
 import tornado.websocket
 from pprint import pprint
 
-class WebSocketHandler(tornado.websocket.WebSocketHandler):
+route = "/a/b/c"
+
+class RhizoSphereHandler(tornado.websocket.WebSocketHandler):
+    route = "/a/b/c"
 
     def auth_confirm(self, id, token):
         print ("id = {}".format(id))
