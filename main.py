@@ -1,22 +1,15 @@
 #-*- coding:utf-8 -*-
+# Copy Right Takeyuki UEDA  © 2018 - All rights reserved.
 
 import tornado.ioloop
 import tornado.web
-#import tornado.websocket
 from tornado.options import define, options
-#from tornado import gen
-#import time
 import ssl
 import os
 import sys
 import pprint
-# import json
 import traceback
 import importlib
-
-#cl=[]
-connections={}
-#a=[]
 
 command = {
     "order": "exec_bash",
@@ -65,8 +58,6 @@ if __name__ == "__main__":
     define("static_path",           default="sample_handlers/static",        help="[mandatory] handler class name of rhizome")
     define("templates_path",        default="sample_handlers/templates",     help="[mandatory] handler class name of rhizome")
 
-
-
     options.parse_command_line()
     if options.config_file:
         options.parse_config_file(options.config_file)
@@ -82,30 +73,14 @@ if __name__ == "__main__":
 
 # app
     requesthandlers = []
-#    requesthandlers.append((options.device_route, deviceshandler))
-#    requesthandlers.append((options.webportalpage_route,   webportalpagehandler))
-#    requesthandlers.append((options.webcommandpage_route,  webcommandpagehandler))
 
-#    mod = importlib.import_module("sample_clienthandler")
-#    mod.connections = connections
-#    requesthandlers.append((options.client_route,          getattr(mod, "RhizoSphereHandler")))
     for handler in options.rhizosperehandlers:
         requesthandlers = append_rshandler(requesthandlers, handler)
-#    requesthandlers.append((options.client_route,   get_rhizosphereHandler("sample_clienthandler")))
 
 
     BASE_DIR = os.path.dirname(__file__)
     app = tornado.web.Application(
-       requesthandlers, 
-#[
-#            (options.device_route,          deviceshandler),
-#            (options.webportalpage_route,   webportalpagehandler),
-#            (options.webcommandpage_route,  webcommandpagehandler),
-#            (options.client_route,          clienthandler),            
-#            (r"/console",   consolehandler),
-#            (r"/command",   commandhandler),
-#            (r"/client/(.*)",    clienthandler),            
- #       ],
+        requesthandlers, 
         template_path=os.path.join(BASE_DIR, options.templates_path),
         static_path=os.path.join(BASE_DIR, options.static_path),
     )
@@ -113,7 +88,6 @@ if __name__ == "__main__":
     if options.protocol == "ws:":
         http_server = tornado.httpserver.HTTPServer(app)
     else:
-#       app.listen(8888)
         ssl_ctx = ssl.create_default_context(ssl.Purpose.CLIENT_AUTH)
         data_dir = options.data_dir
         ssl_ctx.load_cert_chain(os.path.join(data_dir, options.cert_file),

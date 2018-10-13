@@ -1,3 +1,6 @@
+#-*- coding:utf-8 -*-
+# Copy Right Takeyuki UEDA  © 2018 -
+
 import tornado.websocket
 import tornado.web
 from tornado import gen
