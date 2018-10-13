@@ -16,11 +16,9 @@ command = {
     "cmd_str": "ls"
 }
 
-def get_rhizosphereHandler(modulename):
-    global connections
-    mod = importlib.import_module(modulename)
-    mod.connections = connections
-    return getattr(mod, "RhizoSphereHandler")
+def get_handlerclass_and_route(module, classname):
+    handlerclass = getattr(module, classname)
+    return (handlerclass.route, handlerclass)
 
 def append_rshandler(requesthandlers, handler):
     mod = importlib.import_module(handler)
@@ -29,20 +27,15 @@ def append_rshandler(requesthandlers, handler):
     mod.connections = connections
 
     if getattr(mod, "type") == "RS_cdpair_and_connections_shares":
-        mod_clt = getattr(mod, "RS_ClientHandler")
-        requesthandlers.append((mod_clt.route, mod_clt))
-
-        mod_dev = getattr(mod, "RS_DeviceHandler")
-        requesthandlers.append((mod_dev.route, mod_dev))
+        requesthandlers.append(get_handlerclass_and_route(mod, "RS_ClientHandler"))
+        requesthandlers.append(get_handlerclass_and_route(mod, "RS_DeviceHandler"))
 
         connections_shares = getattr(mod, "connections_shares")
         for handler_class_name in connections_shares:
-            mod_handler = getattr(mod, handler_class_name)
-            requesthandlers.append((mod_handler.route, mod_handler))
+            requesthandlers.append(get_handlerclass_and_route(mod, handler_class_name))
 
     else:
-        mod_gen = getattr(mod, "RS_GeneralHandler")
-        requesthandlers.append((mod_gen.route, mod_gen))
+        requesthandlers.append(get_handlerclass_and_route(mod, "RS_GeneralHandler"))
     return requesthandlers
 
 if __name__ == "__main__":
