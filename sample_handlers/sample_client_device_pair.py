@@ -4,7 +4,8 @@
 import tornado.websocket
 import tornado.web
 from tornado import gen
-from pprint import pprint
+
+from tornado.log import app_log
 
 '''
 A global variable of dictionaly "connections" should be added at outside of this module,
@@ -19,40 +20,38 @@ class RS_ClientHandler(tornado.websocket.WebSocketHandler):
     route = "/client/(.*)"
 
     def auth_confirm(self, id, token):
-        print ("id = {}".format(id))
-        print ("token = {}".format(token))
+        app_log.info("auth_confirm:")
+        app_log.info("id =  %s", id)
+        app_log.info("token = %s", token)
         return True
 
     def open(self, id):
-#        print ("open")
-#        id = self.request.headers.get('Sec-Websocket-Protocol')
-        print ("open",id)
+        app_log.info("open: id =  %s", id)
         self.id = id
-        print (id)
         if id in connections:
             connections[id]["client_socket"] = self    
 
     def on_message(self, message):
-        print ("on_message")
-        print(message)
+        app_log.info("on_message: message =  %s", message)
         if self.id in connections:
             if "device_socket" in connections[self.id]:
                 connections[self.id]["device_socket"].write_message(message)  
  
     def on_close(self):
-        print ("close")
+        app_log.info("close:")
 
 
 class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
     route = "/device"
 
     def auth_confirm(self, id, token):
-        print ("id = {}".format(id))
-        print ("token = {}".format(token))
+        app_log.info("auth_confirm:")
+        app_log.info("id =  %s", id)
+        app_log.info("token = %s", token)
         return True
 
     def open(self):
-        print ("open")
+        app_log.info("open:")
         id = self.request.headers.get('X-Custome-Id')
         token = self.request.headers.get('Authorization').startswith('Bearer ')
         
@@ -61,7 +60,7 @@ class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
             # register
             self.id = id
             connections[id] = {"device_socket": self}
-            print ("register {}".format(id))
+            app_log.info("register id =  %s", id)
         else:
             # close
             self.close()
@@ -69,13 +68,12 @@ class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
 
     @gen.coroutine
     def on_message(self, message):
-        print ("on_message")
-        print(message)
+        app_log.info("on_message: message =  %s", message)
         if "client_socket" in connections[self.id]:
             connections[self.id]["client_socket"].write_message(message)
  
     def on_close(self):
-        print ("close")
+        app_log.info("close:")
         if self.id:
             if self.id in connections:
                 connections.pop(self.id)
@@ -96,5 +94,3 @@ class RS_WebCommandPageHandler(tornado.web.RequestHandler):
             pass
 
         self.render('client.html', connections=connections, id=id)
-
-
