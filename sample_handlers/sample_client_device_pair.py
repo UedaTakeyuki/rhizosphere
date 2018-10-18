@@ -40,6 +40,12 @@ class RS_ClientHandler(tornado.websocket.WebSocketHandler):
     def on_close(self):
         app_log.info("close:")
 
+    # accept all cross-origin traffic 
+    # http://www.tornadoweb.org/en/stable/websocket.html#tornado.websocket.WebSocketHandler.check_origin
+    def check_origin(self, origin):
+        return True
+
+
 
 class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
     route = "/device"
