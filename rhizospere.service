@@ -1,8 +1,9 @@
 [Unit]
-Description=Get temp, humid, and humiditydeficit data & Post to the monitor
+Description=root server for collaborative devices
 After=rc-local.service
 [Service]
-ExecStart=/usr/bin/python3 -m /home/ueda/rhizosphere/main
+WorkingDirectory=/home/ueda/rhizosphere
+ExecStart=/usr/bin/python3 /home/ueda/rhizosphere/main.py
 Restart=always
 #RestartSec=90
 RestartSec=30
