@@ -58,8 +58,10 @@ class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
 
     def open(self):
         app_log.info("open:")
+        app_log.info("request headers = %s", ','.join(self.request.headers.keys()))
         id = self.request.headers.get('X-Custome-Id')
-        token = self.request.headers.get('Authorization').startswith('Bearer ')
+        if self.request.headers.get('Authorization').startswith('Bearer '):
+            token = self.request.headers.get('Authorization')[6:]
         
         # confirm authentication
         if self.auth_confirm(id, token):
