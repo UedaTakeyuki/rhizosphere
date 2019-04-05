@@ -14,7 +14,7 @@ A global variable of dictionaly "connections" should be added at outside of this
 
 type = "RS_cdpair_and_connections_shares"
 connections_shares = ["RS_WebPortalPageHander", "RS_WebCommandPageHandler"]
-
+connections={}
 
 class RS_ClientHandler(tornado.websocket.WebSocketHandler):
     route = "/client/(.*)"
@@ -26,12 +26,14 @@ class RS_ClientHandler(tornado.websocket.WebSocketHandler):
         return True
 
     def open(self, id):
+        global connections
         app_log.info("open: id =  %s", id)
         self.id = id
         if id in connections:
             connections[id]["client_socket"] = self    
 
     def on_message(self, message):
+        global connections
         app_log.info("on_message: message =  %s", message)
         if self.id in connections:
             if "device_socket" in connections[self.id]:
@@ -57,11 +59,14 @@ class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
         return True
 
     def open(self):
+        global connections
         app_log.info("open:")
         app_log.info("request headers = %s", ','.join(self.request.headers.keys()))
         id = self.request.headers.get('X-Custome-Id')
-        if self.request.headers.get('Authorization').startswith('Bearer '):
-            token = self.request.headers.get('Authorization')[6:]
+        token = None;
+        if 'Authorization' in self.request.headers.keys():
+            if self.request.headers.get('Authorization').startswith('Bearer '):
+                token = self.request.headers.get('Authorization')[6:]
         
         # confirm authentication
         if self.auth_confirm(id, token):
@@ -76,11 +81,13 @@ class RS_DeviceHandler(tornado.websocket.WebSocketHandler):
 
     @gen.coroutine
     def on_message(self, message):
+        global connections
         app_log.info("on_message: message =  %s", message)
         if "client_socket" in connections[self.id]:
             connections[self.id]["client_socket"].write_message(message)
  
     def on_close(self):
+        global connections
         app_log.info("close:")
         if self.id:
             if self.id in connections:

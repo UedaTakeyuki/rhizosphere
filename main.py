@@ -22,8 +22,8 @@ def get_handlerclass_and_route(module, classname):
 def append_rshandler(requesthandlers, handler):
     mod = importlib.import_module(handler)
 
-    connections={}
-    mod.connections = connections
+    # connections={}
+    # mod.connections = connections
 
     if getattr(mod, "type") == "RS_cdpair_and_connections_shares":
         requesthandlers.append(get_handlerclass_and_route(mod, "RS_ClientHandler"))
